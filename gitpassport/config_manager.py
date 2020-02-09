@@ -3,7 +3,8 @@ import os
 
 CONF_ENV = 'GIT_PASS_CONF'
 CONF_FILE = 'config.json'
-ETC_LOC = '/etc/git-pass'
+LINUX_CONF_LOC = '/etc/git-pass'
+NT_CONF_LOC = os.path.join(os.path.expanduser("~"), 'git-pass')
 
 DEFAULT_CONFIG = {
     'users': {
@@ -14,7 +15,7 @@ DEFAULT_CONFIG = {
 
 
 def get_conf_file() -> str:
-    for conf_loc in (os.environ.get(CONF_ENV), os.curdir, os.path.expanduser("~"), ETC_LOC):
+    for conf_loc in (os.environ.get(CONF_ENV), os.curdir, NT_CONF_LOC, LINUX_CONF_LOC):
         if conf_loc is None:
             continue
         conf_file = os.path.join(conf_loc, CONF_FILE)
@@ -25,8 +26,8 @@ def get_conf_file() -> str:
 
 def get_default_conf_loc() -> str:
     loc_map = {
-        'linux': ETC_LOC,
-        'nt': os.path.expanduser("~")
+        'linux': LINUX_CONF_LOC,
+        'nt': NT_CONF_LOC
     }
     return loc_map.get(os.name, os.curdir)
 
@@ -47,6 +48,8 @@ class ConfigManager:
             return json.load(f, encoding='utf-8')
 
     def save(self) -> None:
+        if not os.path.exists(self.conf_file):
+            os.makedirs(os.path.dirname(self.conf_file))
         with open(self.conf_file, 'w')as f:
             json.dump(self.config, f)
 
