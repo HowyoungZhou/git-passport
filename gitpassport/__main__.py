@@ -30,6 +30,14 @@ def main():
     list_parser.add_argument('-a', '--all', action='store_true')
     list_parser.set_defaults(func=gitpass.list_users)
 
+    edit_parser = subparsers.add_parser('edit', aliases=['e'], prefix_chars='-+')
+    edit_parser.add_argument('name')
+    edit_parser.add_argument('-n', '--name', dest='new_name')
+    edit_parser.add_argument('-e', '--email')
+    edit_parser.add_argument('+a', '--append-alias')
+    edit_parser.add_argument('-a', '--remove-alias')
+    edit_parser.set_defaults(func=gitpass.edit)
+
     remove_parser = subparsers.add_parser('remove', aliases=['d', 'delete'])
     remove_parser.add_argument('name')
     remove_parser.set_defaults(func=gitpass.remove)

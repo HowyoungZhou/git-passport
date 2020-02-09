@@ -56,11 +56,11 @@ class ConfigManager:
     def get(self, name: str, default=None):
         return self.config.get(name, default)
 
-    def get_user(self, name: str) -> dict:
-        user = self.get('users').get(name)
+    def get_user(self, name_or_alias: str) -> dict:
+        user = self.get('users').get(name_or_alias)
         if user is None:
-            name = self.get('aliases').get(name)
-            return self.get('users').get(name)
+            name_or_alias = self.get('aliases').get(name_or_alias)
+            return self.get('users').get(name_or_alias)
         else:
             return user
 
@@ -75,16 +75,41 @@ class ConfigManager:
         return self.get('users').values()
 
     def remove_user(self, name):
+        users = self.get('users')
+        if name not in users:
+            return
+        users.pop(name)
+        # Remove all aliases of the user
         aliases = self.get('aliases')
-        if name in self.get('users'):
-            self.get('users').pop(name)
-            # Remove all aliases of the user
-            for alias, orig in aliases.items():
-                if name == orig:
-                    aliases.pop(alias)
-            self.save()
-        else:
-            orig = aliases.get(name)
-            if orig is not None:
-                aliases.pop(name)
-                self.remove_user(orig)
+        new_aliases = {}
+        for alias, orig in aliases.items():
+            if name != orig:
+                new_aliases[alias] = orig
+        self.config['aliases'] = new_aliases
+        self.save()
+
+    def update_user(self, name, user):
+        self.get('users')[name] = user
+        self.save()
+
+    def update_user_name(self, name, new_name):
+        users = self.get('users')
+        user = users[name]
+        user['user.name'] = new_name
+        users[new_name] = user
+        users.pop(name)
+        aliases = self.get('aliases')
+        for alias, orig in aliases.items():
+            if name == orig:
+                aliases[alias] = new_name
+        self.save()
+
+    def append_alias(self, name, alias):
+        self.get('aliases')[alias] = name
+        self.save()
+
+    def remove_alias(self, alias):
+        aliases = self.get('aliases')
+        if alias in aliases:
+            aliases.pop(alias)
+        self.save()

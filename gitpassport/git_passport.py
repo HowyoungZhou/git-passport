@@ -4,11 +4,16 @@ from gitpassport.config_manager import ConfigManager
 config = ConfigManager()
 
 
-def login(args):
-    user = config.get_user(args.name)
+def get_user(name_or_alias) -> dict:
+    user = config.get_user(name_or_alias)
     if user is None:
-        print('User %s not found.' % args.name)
+        print('User %s not found.' % name_or_alias)
         exit(-1)
+    return user
+
+
+def login(args):
+    user = get_user(args.name)
     for k, v in user.items():
         git_config.replace_all(k, v, args.git_conf_file)
     print('You are now logged in as %s <%s>.' % (user['user.name'], user['user.email']))
@@ -31,4 +36,18 @@ def list_users(args):
 
 
 def remove(args):
-    config.remove_user(args.name)
+    user = get_user(args.name)
+    config.remove_user(user['user.name'])
+
+
+def edit(args):
+    user = get_user(args.name)
+    if args.email is not None:
+        user['user.email'] = args.email
+        config.update_user(user['user.name'], user)
+    if args.new_name is not None:
+        config.update_user_name(user['user.name'], args.new_name)
+    if args.append_alias is not None:
+        config.append_alias(user['user.name'], args.append_alias)
+    if args.remove_alias is not None:
+        config.remove_alias(args.remove_alias)
