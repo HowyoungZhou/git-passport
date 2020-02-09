@@ -27,7 +27,12 @@ def main():
     view_parser.set_defaults(func=gitpass.view)
 
     list_parser = subparsers.add_parser('list')
-    list_parser.add_argument('-a', '--all')
+    list_parser.add_argument('-a', '--all', action='store_true')
+    list_parser.set_defaults(func=gitpass.list_users)
+
+    remove_parser = subparsers.add_parser('remove', aliases=['d', 'delete'])
+    remove_parser.add_argument('name')
+    remove_parser.set_defaults(func=gitpass.remove)
 
     args = parser.parse_args()
     args.func(args)

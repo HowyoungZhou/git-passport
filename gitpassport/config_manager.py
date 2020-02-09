@@ -51,7 +51,7 @@ class ConfigManager:
         if not os.path.exists(self.conf_file):
             os.makedirs(os.path.dirname(self.conf_file))
         with open(self.conf_file, 'w')as f:
-            json.dump(self.config, f)
+            json.dump(self.config, f, indent=2)
 
     def get(self, name: str, default=None):
         return self.config.get(name, default)
@@ -70,3 +70,21 @@ class ConfigManager:
             'user.email': email
         }
         self.save()
+
+    def get_users(self) -> list:
+        return self.get('users').values()
+
+    def remove_user(self, name):
+        aliases = self.get('aliases')
+        if name in self.get('users'):
+            self.get('users').pop(name)
+            # Remove all aliases of the user
+            for alias, orig in aliases.items():
+                if name == orig:
+                    aliases.pop(alias)
+            self.save()
+        else:
+            orig = aliases.get(name)
+            if orig is not None:
+                aliases.pop(name)
+                self.remove_user(orig)

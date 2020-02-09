@@ -24,5 +24,11 @@ def view(args):
         git_config.get('user.name', args.git_conf_file), git_config.get('user.email', args.git_conf_file)))
 
 
-def list(args):
-    pass
+def list_users(args):
+    print('Registered users:')
+    for user in config.get_users():
+        print('%s <%s>' % (user['user.name'], user['user.email']))
+
+
+def remove(args):
+    config.remove_user(args.name)
