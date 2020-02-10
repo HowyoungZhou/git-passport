@@ -37,9 +37,11 @@ class ConfigManager:
         self.conf_file = get_conf_file()
         if self.conf_file is None:
             self.conf_file = os.path.join(get_default_conf_loc(), CONF_FILE)
-            self.config = DEFAULT_CONFIG
+            self.config = {}
         else:
             self.config = self._read_conf_file()
+        for k, v in DEFAULT_CONFIG.items():
+            self.config.setdefault(k, v)
 
     def _read_conf_file(self) -> dict:
         if self.conf_file is None:

@@ -8,8 +8,18 @@ def get_user(name_or_alias) -> dict:
     user = config.get_user(name_or_alias)
     if user is None:
         print('User %s not found.' % name_or_alias)
-        exit(-1)
+        exit(1)
     return user
+
+
+def check_name_conflict(name_or_alias: str, replace: bool):
+    user = config.get_user(name_or_alias)
+    if user is not None:
+        if replace:
+            config.remove_user(user['user.name'])
+        else:
+            print('User %s already exists.' % name_or_alias)
+            exit(2)
 
 
 def login(args):
@@ -20,6 +30,7 @@ def login(args):
 
 
 def register(args):
+    check_name_conflict(args.name, args.replace)
     config.add_user(args.name, args.email)
     print('%s <%s> registered.' % (args.name, args.email))
 
@@ -46,8 +57,10 @@ def edit(args):
         user['user.email'] = args.email
         config.update_user(user['user.name'], user)
     if args.new_name is not None:
+        check_name_conflict(args.new_name, args.replace)
         config.update_user_name(user['user.name'], args.new_name)
-    if args.append_alias is not None:
-        config.append_alias(user['user.name'], args.append_alias)
+    if args.alias is not None:
+        check_name_conflict(args.alias, args.replace)
+        config.append_alias(user['user.name'], args.alias)
     if args.remove_alias is not None:
         config.remove_alias(args.remove_alias)
