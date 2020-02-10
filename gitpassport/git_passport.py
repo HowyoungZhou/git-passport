@@ -25,13 +25,21 @@ def check_name_conflict(name_or_alias: str, replace: bool):
 def login(args):
     user = get_user(args.name)
     for k, v in user.items():
-        git_config.replace_all(k, v, args.git_conf_file)
+        git_config.replace_all(k, str(v), args.git_conf_file)
     print('You are now logged in as %s <%s>.' % (user['user.name'], user['user.email']))
 
 
 def register(args):
     check_name_conflict(args.name, args.replace)
-    config.add_user(args.name, args.email)
+    user = {
+        'user.name': args.name,
+        'user.email': args.email,
+        'commit.gpgsign': args.gpgsign
+    }
+    config.add_user(user)
+    if args.alias is not None:
+        check_name_conflict(args.alias, args.replace)
+        config.append_alias(user['user.name'], args.alias)
     print('%s <%s> registered.' % (args.name, args.email))
 
 
@@ -64,3 +72,5 @@ def edit(args):
         config.append_alias(user['user.name'], args.alias)
     if args.remove_alias is not None:
         config.remove_alias(args.remove_alias)
+    user['commit.gpgsign'] = args.gpgsign
+    config.update_user(user['user.name'], user)

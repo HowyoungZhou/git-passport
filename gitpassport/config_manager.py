@@ -66,11 +66,8 @@ class ConfigManager:
         else:
             return user
 
-    def add_user(self, name, email):
-        self.get('users')[name] = {
-            'user.name': name,
-            'user.email': email
-        }
+    def add_user(self, user: dict):
+        self.get('users')[user['user.name']] = user
         self.save()
 
     def get_users(self) -> list:

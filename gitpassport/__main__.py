@@ -22,6 +22,8 @@ def main():
     register_parser.add_argument('name')
     register_parser.add_argument('email')
     register_parser.add_argument('-r', '--replace', action='store_true')
+    register_parser.add_argument('-a', '--alias')
+    register_parser.add_argument('-g', '--gpgsign', action='store_true')
     register_parser.set_defaults(func=gitpass.register)
 
     view_parser = subparsers.add_parser('view', aliases=['v'], parents=[git_conf_parser])
@@ -37,6 +39,7 @@ def main():
     edit_parser.add_argument('-e', '--email')
     edit_parser.add_argument('-a', '--alias')
     edit_parser.add_argument('--remove-alias')
+    edit_parser.add_argument('-g', '--gpgsign', action='store_true')
     edit_parser.add_argument('-r', '--replace', action='store_true')
     edit_parser.set_defaults(func=gitpass.edit)
 
