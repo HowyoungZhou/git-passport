@@ -1,7 +1,14 @@
 # git-passport
 Account manager for git users with multiple accounts.
 
-# Usage
+## Install
+Install git-passport from PyPi:
+
+```
+pip3 install gitpassport
+```
+
+## Usage
 ```
 usage: git-pass [-h] {login,l,add,a,view,v,edit,e,remove,r} ...
 
@@ -17,8 +24,8 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
-## Add a user
-### Usage
+### Add a user
+#### Usage
 ```
 usage: git-pass add [-h] [-r] [-a ALIAS] [-g] name email
 
@@ -34,7 +41,7 @@ optional arguments:
   -g, --gpgsign         set commit.gpgsign to true
 ```
 
-### Example
+#### Example
 ```bash
 # Add a new user Misaka
 git-pass add Misaka misaka@example.com
@@ -42,8 +49,8 @@ git-pass add Misaka misaka@example.com
 git-pass a -a Kuroko Shirai shirai@example.com
 ```
 
-## Switch users
-### Usage
+### Switch users
+#### Usage
 ```
 usage: git-pass login [-h] [--local] [-g] [-s] [-w] name
 
@@ -60,7 +67,7 @@ optional arguments:
                   extensions.worktreeConfig is present
 ```
 
-### Example
+#### Example
 ```bash
 # Login as Misaka
 git-pass login Misaka
@@ -68,8 +75,8 @@ git-pass login Misaka
 git-pass l -g Kuroko
 ```
 
-## View users
-### Usage
+### View users
+#### Usage
 ```
 usage: git-pass view [-h] [--local] [-g] [-s] [-w] [-l] [-a]
 
@@ -85,7 +92,7 @@ optional arguments:
   -a, --all       show all information of users
 ```
 
-### Example
+#### Example
 ```bash
 # View local user
 git-pass view
@@ -97,8 +104,8 @@ git-pass v -l
 git-pass v -la
 ```
 
-## Edit a user
-### Usage
+### Edit a user
+#### Usage
 ```
 usage: git-pass edit [-h] [-n NEW_NAME] [-e EMAIL] [-a ALIAS]
                      [--remove-alias ALIAS] [-g] [-r]
@@ -120,7 +127,7 @@ optional arguments:
   -r, --replace         replace the user if the name or alias already exists
 ```
 
-### Example
+#### Example
 ```bash
 # Rename Misaka to Mikoto
 git-pass edit Misaka -n Mikoto
@@ -132,8 +139,8 @@ git-pass e -a Onee-sama Mikoto
 git-pass e --remove-alias Onee-sama Mikoto
 ```
 
-## Remove a user
-### Usage
+### Remove a user
+#### Usage
 ```
 usage: git-pass remove [-h] name
 
@@ -144,7 +151,7 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-### Example
+#### Example
 ```bash
 # Remove a user
 git-pass remove Kamijou
