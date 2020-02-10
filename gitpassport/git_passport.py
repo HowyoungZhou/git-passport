@@ -46,12 +46,22 @@ def register(args):
 def view(args):
     print('You are now logged in as %s <%s>.' % (
         git_config.get('user.name', args.git_conf_file), git_config.get('user.email', args.git_conf_file)))
-
-
-def list_users(args):
-    print('Registered users:')
-    for user in config.get_users():
-        print('%s <%s>' % (user['user.name'], user['user.email']))
+    if args.list:
+        print()
+        print('Registered users:')
+        aliases = {}
+        if args.all:
+            aliases = config.get_aliases_of_users()
+        for user in config.get_users():
+            name = user['user.name']
+            print('%s <%s>' % (name, user['user.email']))
+            if not args.all:
+                continue
+            alias = aliases.get(name, [])
+            if len(alias) > 0:
+                print('%s: %s' % ('Alias' if len(alias) == 1 else 'Aliases', ', '.join(alias)))
+            print('GPG Sign: %s' % user.get('commit.gpgsign', False))
+            print()
 
 
 def remove(args):

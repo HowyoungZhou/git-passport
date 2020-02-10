@@ -27,11 +27,9 @@ def main():
     register_parser.set_defaults(func=gitpass.register)
 
     view_parser = subparsers.add_parser('view', aliases=['v'], parents=[git_conf_parser])
+    view_parser.add_argument('-l', '--list', action='store_true')
+    view_parser.add_argument('-a', '--all', action='store_true')
     view_parser.set_defaults(func=gitpass.view)
-
-    list_parser = subparsers.add_parser('list')
-    list_parser.add_argument('-a', '--all', action='store_true')
-    list_parser.set_defaults(func=gitpass.list_users)
 
     edit_parser = subparsers.add_parser('edit', aliases=['e'])
     edit_parser.add_argument('name')
@@ -43,7 +41,7 @@ def main():
     edit_parser.add_argument('-r', '--replace', action='store_true')
     edit_parser.set_defaults(func=gitpass.edit)
 
-    remove_parser = subparsers.add_parser('remove', aliases=['d', 'delete'])
+    remove_parser = subparsers.add_parser('remove', aliases=['delete', 'd'])
     remove_parser.add_argument('name')
     remove_parser.set_defaults(func=gitpass.remove)
 

@@ -112,3 +112,10 @@ class ConfigManager:
         if alias in aliases:
             aliases.pop(alias)
         self.save()
+
+    def get_aliases_of_users(self):
+        res = {}
+        for alias, name in self.get('aliases').items():
+            res.setdefault(name, [])
+            res[name].append(alias)
+        return res
