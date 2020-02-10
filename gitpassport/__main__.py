@@ -14,6 +14,8 @@ def main():
     subparsers = parser.add_subparsers()
 
     git_conf_parser = argparse.ArgumentParser(add_help=False)
+    git_conf_parser.add_argument('--local', action='store_const', const='local', dest='git_conf_file',
+                                 help='write to or read from the repository .git/config file (default)')
     git_conf_parser.add_argument('-g', '--global', action='store_const', const='global', dest='git_conf_file',
                                  help='write to or read from global ~/.gitconfig file')
     git_conf_parser.add_argument('-s', '--system', action='store_const', const='system', dest='git_conf_file',
@@ -27,7 +29,7 @@ def main():
     login_parser.add_argument('name', help='name or alias of the user')
     login_parser.set_defaults(func=gitpass.login)
 
-    register_parser = subparsers.add_parser('register', aliases=['r'], help='register a new user')
+    register_parser = subparsers.add_parser('add', aliases=['a'], help='add a new user')
     register_parser.add_argument('name', help='name of the user')
     register_parser.add_argument('email', help='email of the user')
     register_parser.add_argument('-r', '--replace', action='store_true',
@@ -53,7 +55,7 @@ def main():
                              help='replace the user if the name or alias already exists')
     edit_parser.set_defaults(func=gitpass.edit)
 
-    remove_parser = subparsers.add_parser('remove', aliases=['delete', 'd'], help='remove a user')
+    remove_parser = subparsers.add_parser('remove', aliases=['r'], help='remove a user')
     remove_parser.add_argument('name', help='name or alias of the user')
     remove_parser.set_defaults(func=gitpass.remove)
 

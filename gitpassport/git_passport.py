@@ -1,15 +1,48 @@
+import subprocess
+import sys
+
 from gitpassport import git_config
 from gitpassport.config_manager import ConfigManager
 
 config = ConfigManager()
 
+USER_NOT_FOUND = 1
+USER_EXISTS = 2
+GIT_ERROR = 3
+
+
+def panic(msg: str, code: int):
+    print(msg, file=sys.stderr)
+    sys.exit(code)
+
+
+def check_git():
+    try:
+        ver = git_config.version()
+        return ver
+    except subprocess.CalledProcessError as ex:
+        if ex.stderr is not None:
+            print('git: ' + ex.stderr.rstrip('\n'), file=sys.stderr)
+        panic('Please make sure that your git has been installed and configured correctly.', GIT_ERROR)
+
 
 def get_user(name_or_alias) -> dict:
     user = config.get_user(name_or_alias)
     if user is None:
-        print('User %s not found.' % name_or_alias)
-        exit(1)
+        panic('User %s not found.' % name_or_alias, USER_NOT_FOUND)
     return user
+
+
+def get_cur_user(file: str = 'local') -> (str, str):
+    check_git()
+    try:
+        user = git_config.get('user.name', file)
+        email = git_config.get('user.email', file)
+        return user, email
+    except subprocess.CalledProcessError as ex:
+        if ex.stderr is not None:
+            print('git: ' + ex.stderr.rstrip('\n'), file=sys.stderr)
+        panic('To get global user, use -g/--global.', GIT_ERROR)
 
 
 def check_name_conflict(name_or_alias: str, replace: bool):
@@ -18,15 +51,20 @@ def check_name_conflict(name_or_alias: str, replace: bool):
         if replace:
             config.remove_user(user['user.name'])
         else:
-            print('User %s already exists.' % name_or_alias)
-            exit(2)
+            panic('User %s already exists.' % name_or_alias, USER_EXISTS)
 
 
 def login(args):
+    check_git()
     user = get_user(args.name)
-    for k, v in user.items():
-        git_config.replace_all(k, str(v), args.git_conf_file)
-    print('You are now logged in as %s <%s>.' % (user['user.name'], user['user.email']))
+    try:
+        for k, v in user.items():
+            git_config.replace_all(k, str(v), args.git_conf_file)
+        print('You are now logged in as %s <%s>.' % (user['user.name'], user['user.email']))
+    except subprocess.CalledProcessError as ex:
+        if ex.stderr is not None:
+            print('git: ' + ex.stderr.rstrip('\n'), file=sys.stderr)
+        panic('To login as a global user, use -g/--global.', GIT_ERROR)
 
 
 def register(args):
@@ -44,15 +82,13 @@ def register(args):
 
 
 def view(args):
-    print('You are now logged in as %s <%s>.' % (
-        git_config.get('user.name', args.git_conf_file), git_config.get('user.email', args.git_conf_file)))
     if args.list:
-        print()
         print('Registered users:')
         aliases = {}
         if args.all:
             aliases = config.get_aliases_of_users()
-        for user in config.get_users():
+        users = config.get_users()
+        for i, user in enumerate(users):
             name = user['user.name']
             print('%s <%s>' % (name, user['user.email']))
             if not args.all:
@@ -61,7 +97,12 @@ def view(args):
             if len(alias) > 0:
                 print('%s: %s' % ('Alias' if len(alias) == 1 else 'Aliases', ', '.join(alias)))
             print('GPG Sign: %s' % user.get('commit.gpgsign', False))
-            print()
+            if i != len(users) - 1:
+                print()
+        if len(users) == 0:
+            print('(none)')
+    else:
+        print('You are now logged in as %s <%s>.' % get_cur_user(args.git_conf_file))
 
 
 def remove(args):

@@ -26,7 +26,7 @@ def get_conf_file() -> str:
 
 def get_default_conf_loc() -> str:
     loc_map = {
-        'linux': LINUX_CONF_LOC,
+        'posix': LINUX_CONF_LOC,
         'nt': NT_CONF_LOC
     }
     return loc_map.get(os.name, os.curdir)
@@ -50,8 +50,7 @@ class ConfigManager:
             return json.load(f, encoding='utf-8')
 
     def save(self) -> None:
-        if not os.path.exists(self.conf_file):
-            os.makedirs(os.path.dirname(self.conf_file))
+        os.makedirs(os.path.dirname(self.conf_file), exist_ok=True)
         with open(self.conf_file, 'w')as f:
             json.dump(self.config, f, indent=2)
 
