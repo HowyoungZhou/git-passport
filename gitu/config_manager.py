@@ -1,10 +1,10 @@
 import json
 import os
 
-CONF_ENV = 'GIT_PASS_CONF'
+CONF_ENV = 'GITU_CONF'
 CONF_FILE = 'config.json'
-LINUX_CONF_LOC = '/etc/git-pass'
-NT_CONF_LOC = os.path.join(os.path.expanduser("~"), 'git-pass')
+LINUX_CONF_LOC = '/etc/gitu'
+NT_CONF_LOC = os.path.join(os.path.expanduser("~"), 'gitu')
 
 DEFAULT_CONFIG = {
     'users': {

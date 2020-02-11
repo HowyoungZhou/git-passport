@@ -1,6 +1,6 @@
 import argparse
 
-import gitpassport.git_passport as gitpass
+import gitu.functions as functions
 
 
 def print_help(args):
@@ -27,7 +27,7 @@ def main():
     login_parser = subparsers.add_parser('login', aliases=['l'], parents=[git_conf_parser],
                                          help='switch users')
     login_parser.add_argument('name', help='name or alias of the user')
-    login_parser.set_defaults(func=gitpass.login)
+    login_parser.set_defaults(func=functions.login)
 
     register_parser = subparsers.add_parser('add', aliases=['a'], help='add a new user')
     register_parser.add_argument('name', help='name of the user')
@@ -36,13 +36,13 @@ def main():
                                  help='replace the user if the name or alias already exists')
     register_parser.add_argument('-a', '--alias', help='add a alias to the user')
     register_parser.add_argument('-g', '--gpgsign', action='store_true', help='set commit.gpgsign to true')
-    register_parser.set_defaults(func=gitpass.register)
+    register_parser.set_defaults(func=functions.register)
 
     view_parser = subparsers.add_parser('view', aliases=['v'], parents=[git_conf_parser],
                                         help='view information of users')
     view_parser.add_argument('-l', '--list', action='store_true', help='list all users')
     view_parser.add_argument('-a', '--all', action='store_true', help='show all information of users')
-    view_parser.set_defaults(func=gitpass.view)
+    view_parser.set_defaults(func=functions.view)
 
     edit_parser = subparsers.add_parser('edit', aliases=['e'], help='edit the information of a user')
     edit_parser.add_argument('name', help='name or alias of the user')
@@ -53,11 +53,11 @@ def main():
     edit_parser.add_argument('-g', '--gpgsign', action='store_true', help='set commit.gpgsign to true')
     edit_parser.add_argument('-r', '--replace', action='store_true',
                              help='replace the user if the name or alias already exists')
-    edit_parser.set_defaults(func=gitpass.edit)
+    edit_parser.set_defaults(func=functions.edit)
 
     remove_parser = subparsers.add_parser('remove', aliases=['r'], help='remove a user')
     remove_parser.add_argument('name', help='name or alias of the user')
-    remove_parser.set_defaults(func=gitpass.remove)
+    remove_parser.set_defaults(func=functions.remove)
 
     args = parser.parse_args()
     args.func(args)

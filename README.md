@@ -1,16 +1,16 @@
-# git-passport
+# gitu
 Account manager for git users with multiple accounts.
 
 ## Install
-Install git-passport from PyPi:
+Install gitu from PyPi:
 
 ```
-pip3 install gitpassport
+pip install gitu
 ```
 
 ## Usage
 ```
-usage: git-pass [-h] {login,l,add,a,view,v,edit,e,remove,r} ...
+usage: gitu [-h] {login,l,add,a,view,v,edit,e,remove,r} ...
 
 positional arguments:
   {login,l,add,a,view,v,edit,e,remove,r}
@@ -27,7 +27,7 @@ optional arguments:
 ### Add a user
 #### Usage
 ```
-usage: git-pass add [-h] [-r] [-a ALIAS] [-g] name email
+usage: gitu add [-h] [-r] [-a ALIAS] [-g] name email
 
 positional arguments:
   name                  name of the user
@@ -44,15 +44,15 @@ optional arguments:
 #### Example
 ```bash
 # Add a new user Misaka
-git-pass add Misaka misaka@example.com
+gitu add Misaka misaka@example.com
 # Add a new user Shirai with alias Kuroko
-git-pass a -a Kuroko Shirai shirai@example.com
+gitu a -a Kuroko Shirai shirai@example.com
 ```
 
 ### Switch users
 #### Usage
 ```
-usage: git-pass login [-h] [--local] [-g] [-s] [-w] name
+usage: gitu login [-h] [--local] [-g] [-s] [-w] name
 
 positional arguments:
   name            name or alias of the user
@@ -70,15 +70,15 @@ optional arguments:
 #### Example
 ```bash
 # Login as Misaka
-git-pass login Misaka
+gitu login Misaka
 # Login as Shirai Kuroko globally
-git-pass l -g Kuroko
+gitu l -g Kuroko
 ```
 
 ### View users
 #### Usage
 ```
-usage: git-pass view [-h] [--local] [-g] [-s] [-w] [-l] [-a]
+usage: gitu view [-h] [--local] [-g] [-s] [-w] [-l] [-a]
 
 optional arguments:
   -h, --help      show this help message and exit
@@ -95,19 +95,19 @@ optional arguments:
 #### Example
 ```bash
 # View local user
-git-pass view
+gitu view
 # View global user
-git-pass v -g
+gitu v -g
 # List all users
-git-pass v -l
+gitu v -l
 # List all users in details
-git-pass v -la
+gitu v -la
 ```
 
 ### Edit a user
 #### Usage
 ```
-usage: git-pass edit [-h] [-n NEW_NAME] [-e EMAIL] [-a ALIAS]
+usage: gitu edit [-h] [-n NEW_NAME] [-e EMAIL] [-a ALIAS]
                      [--remove-alias ALIAS] [-g] [-r]
                      name
 
@@ -130,19 +130,19 @@ optional arguments:
 #### Example
 ```bash
 # Rename Misaka to Mikoto
-git-pass edit Misaka -n Mikoto
+gitu edit Misaka -n Mikoto
 # Change Email
-git-pass e Shirai -e shirai@gakuen-toshi.tech
+gitu e Shirai -e shirai@gakuen-toshi.tech
 # Add alias
-git-pass e -a Onee-sama Mikoto
+gitu e -a Onee-sama Mikoto
 # Remove alias
-git-pass e --remove-alias Onee-sama Mikoto
+gitu e --remove-alias Onee-sama Mikoto
 ```
 
 ### Remove a user
 #### Usage
 ```
-usage: git-pass remove [-h] name
+usage: gitu remove [-h] name
 
 positional arguments:
   name        name or alias of the user
@@ -154,7 +154,7 @@ optional arguments:
 #### Example
 ```bash
 # Remove a user
-git-pass remove Kamijou
+gitu remove Kamijou
 ```
 
 ## Exit status
@@ -162,6 +162,6 @@ git-pass remove Kamijou
 The status is one of the follows:
 
 - `0 (SUCCESS)`: the operation succeeded.
-- `1 (USER_NOT_FOUND)`: the user doesn't exist.
+- `1 (USER_NOT_FOUND)`: the user does not exist.
 - `2 (USER_EXISTS)`: the user already exists. To replace the user, use `-r`/`--replace`.
 - `3 (GIT_ERROR)`: failed to execute a git command.

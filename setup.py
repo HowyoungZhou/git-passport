@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="gitpassport",
+    name="gitu",
     version="0.1.0",
     author="Howyoung Zhou",
     author_email="howyoungzhou@yahoo.com",
     description="Account manager for git users with multiple accounts.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/HowyoungZhou/git-passport",
+    url="https://github.com/HowyoungZhou/gitu",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -20,7 +20,7 @@ setuptools.setup(
     ],
     entry_points={
         "console_scripts": [
-            "git-pass = gitpassport.__main__:main"
+            "gitu = gitu.__main__:main"
         ]
     },
     python_requires='>=3.5',

@@ -1,8 +1,8 @@
 import subprocess
 import sys
 
-from gitpassport import git_config
-from gitpassport.config_manager import ConfigManager
+from gitu import git_config
+from gitu.config_manager import ConfigManager
 
 config = ConfigManager()
 
