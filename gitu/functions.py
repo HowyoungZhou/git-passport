@@ -72,7 +72,7 @@ def register(args):
     user = {
         'user.name': args.name,
         'user.email': args.email,
-        'commit.gpgsign': args.gpgsign,
+        'commit.gpgsign': args.gpgsign,  # TODO: new user class will replace the bug when args are None here
         'user.signingkey': args.gpgkey
     }
     config.add_user(user)
@@ -124,9 +124,11 @@ def edit(args):
         config.append_alias(user['user.name'], args.alias)
     if args.remove_alias is not None:
         config.remove_alias(args.remove_alias)
+    if args.gpgsign is not None:
+        user['commit.gpgsign'] = args.gpgsign
+        config.update_user(user['user.name'], user)
     if args.gpgkey is not None:
         user['user.signingkey'] = args.gpgkey
         config.update_user(user['user.name'], user)
 
-    user['commit.gpgsign'] = args.gpgsign
     config.update_user(user['user.name'], user)

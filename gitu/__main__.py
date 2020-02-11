@@ -8,6 +8,10 @@ def print_help(args):
     args.parser.print_help()
 
 
+def str2bool(v):
+    return v.lower() in ("yes", "y", "true", "t", "1")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + gitu.__version__)
@@ -28,7 +32,7 @@ def main():
 
     user_parser = argparse.ArgumentParser(add_help=False)
     user_parser.add_argument('-a', '--alias', help='add a alias to the user')
-    user_parser.add_argument('-g', '--gpgsign', action='store_true', help='whether all commits should be GPG signed')
+    user_parser.add_argument('-g', '--gpgsign', type=str2bool, help='whether all commits should be GPG signed')
     user_parser.add_argument('-k', '--gpgkey', help='GPG signing key')
     user_parser.add_argument('-r', '--replace', action='store_true',
                              help='replace the user if the name or alias already exists')
