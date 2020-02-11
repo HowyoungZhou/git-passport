@@ -1,11 +1,13 @@
 import setuptools
 
+import gitu
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="gitu",
-    version="0.1.0",
+    version=gitu.__version__,
     author="Howyoung Zhou",
     author_email="howyoungzhou@yahoo.com",
     description="Account manager for git users with multiple accounts.",
