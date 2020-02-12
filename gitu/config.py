@@ -8,13 +8,6 @@ CONF_FILE = 'config.json'
 LINUX_CONF_LOC = '/etc/gitu'
 NT_CONF_LOC = os.path.join(os.path.expanduser("~"), '.gitu')
 
-DEFAULT_CONFIG = {
-    'users': {
-    },
-    'aliases': {
-    }
-}
-
 GIT_CONF = {
     'name': 'user.name',
     'email': 'user.email',
@@ -54,8 +47,11 @@ class User:
                 setattr(self, k, v)
 
 
-def get_conf_file() -> str:
-    for conf_loc in (os.environ.get(CONF_ENV), os.curdir, NT_CONF_LOC, LINUX_CONF_LOC):
+def get_conf_file() -> str or None:
+    if CONF_ENV in os.environ:
+        return os.path.join(os.environ[CONF_ENV], CONF_FILE)
+
+    for conf_loc in (os.curdir, NT_CONF_LOC, LINUX_CONF_LOC):
         if conf_loc is None:
             continue
         conf_file = os.path.join(conf_loc, CONF_FILE)
@@ -74,17 +70,17 @@ def get_default_conf_loc() -> str:
 
 class Config:
     def __init__(self):
+        self.users = {}
+        self.aliases = {}
         self.conf_file = get_conf_file()
         if self.conf_file is None:
             self.conf_file = os.path.join(get_default_conf_loc(), CONF_FILE)
-            self.users = {}
-            self.aliases = {}
-        else:
-            self.config = self._read_conf_file()
+        self._read_conf_file()
 
-    def _read_conf_file(self) -> dict:
-        if self.conf_file is None:
-            return None
+    def _read_conf_file(self):
+        if not os.path.exists(self.conf_file):
+            return
+
         with open(self.conf_file, 'r') as f:
             conf = json.load(f, encoding='utf-8')
             self.aliases = conf.get('aliases', {})

@@ -12,7 +12,7 @@ def str2bool(v):
     return v.lower() in ("yes", "y", "true", "t", "1")
 
 
-def main():
+def main(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + gitu.__version__)
     parser.set_defaults(func=print_help)
@@ -65,7 +65,7 @@ def main():
     remove_parser.add_argument('name', help='name or alias of the user')
     remove_parser.set_defaults(func=functions.remove)
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     args.func(args)
 
 
